@@ -38,16 +38,15 @@ function App() {
       }
     }
     
-    arrayAppointments.forEach(item => {
+      arrayAppointments.forEach(item => {
       const startDuration = item[0];
       const endDuration = item[1];
 
       let SlotsWithStartDuration = arrayOfFreeSlots.filter(elem => elem.split(':')[0] === startDuration.split(':')[0] && +elem.split(':')[1] <= +startDuration.split(':')[1]);
-      let SlotsWithEndDuration = arrayOfFreeSlots.filter(elem => elem.split(':')[0] === endDuration.split(':')[0] && +elem.split(':')[1] < +endDuration.split(':')[1]);
-
+      let SlotsWithEndDuration = arrayOfFreeSlots.filter(elem => elem.split(':')[0] === endDuration.split(':')[0] && +elem.split(':')[1] <= +endDuration.split(':')[1]);
       arrayOfFreeSlots = arrayOfFreeSlots.filter((item,i) => item !== SlotsWithStartDuration[1]);
-      arrayOfFreeSlots = arrayOfFreeSlots.filter((item,i) => item !== SlotsWithEndDuration[0]);
 
+      console.log(SlotsWithEndDuration);
     });
 
     console.log(arrayOfFreeSlots);

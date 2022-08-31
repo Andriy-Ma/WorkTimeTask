@@ -2,13 +2,14 @@ import './App.css';
 import data from './doctorsSchedule.json'
 
 function App() {
-  
+
   const findFreeSlots = () => {
 
     const fullTime = data.end.split(':')[0] - data.start.split(':')[0];
-    let arrayOfFreeSlots = [data.start];
+    let arrayOfSlots = [data.start];
     let hours = +data.start.split(':')[0];
     let minutes = +data.start.split(':')[1];
+    let arrayOfFreeSlots = [];
 
     const arrayAppointments = data.appointments.map(time => {
       let array = [time.start];
@@ -16,7 +17,7 @@ function App() {
       let secondDataHours = +time.start.split(':')[0];
       secondDataMinutes += time.duration 
       if(secondDataMinutes > 60){
-        secondDataMinutes -= 60;
+        secondDataMinutes = secondDataMinutes - 60;
         secondDataHours += 1
         array.push(`${secondDataHours}:${secondDataMinutes}`);
       } else {
@@ -26,44 +27,40 @@ function App() {
     });
 
     for(let i = 0 ; i < Math.floor((fullTime * 60 / 45)) ; i++){
-      minutes += 45;
+      minutes = minutes + 45;
       if(minutes > 60){
         minutes -= 60;
         hours += 1
-        arrayOfFreeSlots.push(`${hours}:${minutes}`);
+        arrayOfSlots.push(`${hours}:${minutes}`);
       } else if (minutes === 60){
-        arrayOfFreeSlots.push(`${hours + 1}:00`);
+        arrayOfSlots.push(`${hours + 1}:00`);
       } else {
-        arrayOfFreeSlots.push(`${hours}:${minutes}`);
+        arrayOfSlots.push(`${hours}:${minutes}`);
       }
     }
-    
-    arrayAppointments.forEach(item => {
+    arrayAppointments.map(item => {
       const startDuration = item[0];
       const endDuration = item[1];
+      arrayOfSlots.map(elem => {
+        console.log(startDuration.split(':')[1])
+        if((elem.split(':')[0] === startDuration.split(':')[0] && +elem.split(':')[1] <= +startDuration.split(':')[1])){
+          arrayOfFreeSlots.push(elem);
+        }
+      })
+    })
 
-      let SlotsWithStartDuration = arrayOfFreeSlots.filter(elem => elem.split(':')[0] === startDuration.split(':')[0] && +elem.split(':')[1] <= +startDuration.split(':')[1]);
-      let SlotsWithEndDuration = arrayOfFreeSlots.filter(elem => elem.split(':')[0] === endDuration.split(':')[0] && +elem.split(':')[1] < +endDuration.split(':')[1]);
 
-      arrayOfFreeSlots = arrayOfFreeSlots.filter((item,i) => item !== SlotsWithStartDuration[1]);
-      arrayOfFreeSlots = arrayOfFreeSlots.filter((item,i) => item !== SlotsWithEndDuration[0]);
 
-    });
-
+    console.log(arrayOfSlots);
     console.log(arrayOfFreeSlots);
-
-    return arrayOfFreeSlots;
+    console.log(arrayAppointments);
   }
+
+  findFreeSlots();
 
   return (
     <div >
-     {findFreeSlots().map(elem => {
-        return (
-          <div key={elem}>
-            {elem}
-          </div>
-        )
-     })}
+     лол
     </div>
   );
 }
